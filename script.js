@@ -1,21 +1,32 @@
-$(document).ready(function() {
-    $('#registration-form').submit(function(e) {
-        e.preventDefault();
+$(document).ready(function () {
+    $("#registrationForm").submit(function (event) {
+        // Prevent form submission to PHP directly
+        event.preventDefault();
 
-        // Get form data
-        var formData = $(this).serialize();
+        // Validate inputs
+        let name = $("#name").val();
+        let email = $("#email").val();
+        let phone = $("#phone").val();
+        let dob = $("#dob").val();
+        let gender = $("#gender").val();
+        let address = $("#address").val();
 
-        // Send form data to the server via AJAX
+        if (!name || !email || !phone || !dob || !gender || !address) {
+            alert("All fields are required!");
+            return;
+        }
+
+        // Submit form via AJAX
         $.ajax({
-            type: 'POST',
-            url: 'process_form.php',
-            data: formData,
-            success: function(response) {
-                $('#result').html(response);
-                $('#registration-form')[0].reset();
+            url: "process.php",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function (response) {
+                $("#successMessage").html(response).fadeIn();
+                $("#registrationForm")[0].reset();
             },
-            error: function() {
-                alert('There was an error while processing the form.');
+            error: function () {
+                alert("Error submitting the form. Please try again.");
             }
         });
     });
